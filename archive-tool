@@ -1,0 +1,30 @@
+!/bin/bash
+#Authour: acerlat
+#Date: 16.07.2025
+#Desc:This script archive logs from a specific file to another dir and then compres and zip log file and deletes a recently configured file in a new directory where the file was copied.
+
+
+timestamp=$(date +"%Y%m%d_%H%M")
+
+echo
+src="/var/log/ufw.log"
+echo
+archive_dir="/tmp/archives"
+echo
+dst="$archive_dir/log-archive_$timestamp.log"
+echo
+arh_dst="$archive_dir/log-archive_$timestamp.tar.gz"
+echo
+
+mkdir -p "$archive_dir"
+
+echo "Start copy from $src to $dst"
+cp "$src" "$dst"
+
+echo "Start to compress and zip from $dst to $arh_dst"
+tar -czf "$arh_dst" -C "$archive_dir" "$(basename "$dst")"
+
+echo "Delete old log file"
+rm /tmp/archives/log-archive_*.log
+
+echo "Log archived to $arh_dst"
